@@ -128,7 +128,45 @@ These patterns can be adapted to enforce per-event or global retention policies,
 
 ---
 
-## 8. Example Highlights
+## 8. Direct REST API Calls vs. Using the Kaltura Client Library
+
+There are two common ways to interact with Kaltura data:
+
+### Direct REST API Calls
+
+These examples use simple REST calls (`requests.get()`) against endpoints such as:
+
+```
+GET https://www.kaltura.com/api/v1/events
+GET https://www.kaltura.com/api/v1/attendees
+GET https://www.kaltura.com/api/v1/viewership
+```
+
+This approach is lightweight, transparent, and ideal for demonstrating concepts like pagination, filtering, and error handling. It’s also useful when integrating Kaltura data into systems that already rely on generic REST clients or ETL frameworks.
+
+### Kaltura Client Library (Python, Java, Node.js, etc.)
+
+For production applications, Kaltura offers SDKs such as the **KalturaApiClient** for Python. Using the SDK simplifies authentication, handles signatures, and provides object-oriented wrappers around Kaltura services.
+
+A typical call with the Python SDK might look like this:
+
+```python
+from KalturaApiClient import KalturaClient, KalturaConfiguration
+
+config = KalturaConfiguration(partner_id=YOUR_PARTNER_ID)
+client = KalturaClient(config)
+client.session.start(secret, user_id, KalturaSessionType.ADMIN, partner_id)
+
+filter = KalturaEventFilter()
+filter.orderBy = "-createdAt"
+events = client.event.list(filter)
+```
+
+In practice, both methods work. For quick prototypes, REST calls are faster to adapt. For applications that require full API coverage, retry logic, and session management, the client library is usually preferred.
+
+---
+
+## 9. Example Highlights
 
 * **pagination_examples.py** — demonstrates offset, token, and incremental pagination.
 * **events_api_example.py** — retrieves events metadata and updates.
@@ -138,7 +176,7 @@ These patterns can be adapted to enforce per-event or global retention policies,
 
 ---
 
-## 9. References
+## 10. References
 
 For detailed API and authentication documentation:
 
